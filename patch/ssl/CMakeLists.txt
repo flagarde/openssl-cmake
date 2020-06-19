@@ -43,11 +43,11 @@ include_directories( BEFORE SYSTEM
   ${PROJECT_SOURCE_DIR}/ # e_os.h
 )
 
+add_library( ssl ${LIBSRC} )
+
 if( NOT MSVC )
     target_compile_options(ssl PRIVATE -fPIC)
 endif()
-
-add_library( ssl ${LIBSRC} )
 
 target_include_directories( ssl PUBLIC ${PROJECT_BINARY_DIR}/include )
 

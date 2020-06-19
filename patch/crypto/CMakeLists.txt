@@ -280,6 +280,10 @@ endif()
 
 add_library( crypto ${LIBSRC} ${OBJECTS_SRC} )
 
+if( NOT MSVC )
+    target_compile_options(crypto PRIVATE -fPIC)
+endif()
+
 target_include_directories( crypto PUBLIC ${PROJECT_BINARY_DIR}/include )
 
 if( WIN32 AND NOT CYGWIN )

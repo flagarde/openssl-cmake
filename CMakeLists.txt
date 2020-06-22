@@ -37,6 +37,8 @@ endif()
 option( WITH_APPS "Build applications" OFF )
 option( WITH_DOCS  "Install docs" OFF )
 
+set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
+
 include(ExternalProject)
 # ----- OpenSSL package -----
 ExternalProject_Add(OpenSSL

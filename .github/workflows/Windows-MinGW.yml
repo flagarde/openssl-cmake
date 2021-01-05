@@ -134,12 +134,13 @@ jobs:
         if (NOT result EQUAL 0)
           message(FATAL_ERROR "Running tests failed!")
         endif()
-    - name: ➕ Install Strip
-      run: cmake --install build --prefix instdir --strip
+    #THERE IS NO INSTALL
+    #- name: ➕ Install Strip
+    #  run: cmake --install build --prefix instdir --strip
 
 
     - name: 📦 Pack
-      working-directory: instdir
+      working-directory: bin
       run: cmake -E tar cJfv ../${{ matrix.config.artifact }} .
 
 

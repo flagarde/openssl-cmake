@@ -138,19 +138,11 @@ jobs:
     #  run: cmake -E tar cJfv ../${{ matrix.config.artifact }} .
 
 
-    - name: 📦 Pack
-      working-directory: bin
-      uses: actions/upload-artifact@v1
-      with:
-        path: .
-        name: ${{ matrix.config.artifact }}
-
-
     - name: 🚀 Upload
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v2
       with:
         name: ${{ matrix.config.artifact }}
-        path: ./
+        path: bin
 
   release:
     if: contains(github.ref, 'tags/v')

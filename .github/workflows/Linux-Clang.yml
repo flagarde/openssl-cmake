@@ -119,15 +119,16 @@ jobs:
     #  run: cmake --install build --prefix instdir --strip
 
 
+    #- name: 📦 Pack
+    #  working-directory: bin
+    #  run: cmake -E tar cJfv ../${{ matrix.config.artifact }} .
+
+
     - name: 📦 Pack
       working-directory: bin
-      run: cmake -E tar cJfv ../${{ matrix.config.artifact }} .
-
-
-    - name: Upload
       uses: actions/upload-artifact@v1
       with:
-        path: ./${{ matrix.config.artifact }}
+        path: .
         name: ${{ matrix.config.artifact }}
 
   release:

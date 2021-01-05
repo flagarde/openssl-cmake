@@ -20,9 +20,9 @@
 # SOFTWARE.
 cmake_minimum_required(VERSION 3.10...3.17.2)
 
-project(OpenSSL VERSION "1.0.0" LANGUAGES CXX DESCRIPTION "CMake to compile OpenSSL" HOMEPAGE_URL "https://github.com/RPClab/openssl-cmake")
+project(OpenSSL VERSION "1.0.0" LANGUAGES CXX DESCRIPTION "CMake to compile OpenSSL" HOMEPAGE_URL "https://github.com/flagarde/openssl-cmake")
 
-set(OPENSSL_TAG "1_1_1g" CACHE STRING "Version the OpenSSL to download")
+set(OPENSSL_TAG "1_1_1i" CACHE STRING "Version the OpenSSL to download")
 set(OPENSSL_URL "https://github.com/openssl/openssl/archive/OpenSSL_${OPENSSL_TAG}.zip" CACHE STRING "URL of the OpenSSL depot")
 
 if(PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR)
@@ -34,8 +34,8 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
   message(STATUS "Install Prefix set to : ${CMAKE_INSTALL_PREFIX}")
 endif()
 
-option( WITH_APPS "Build applications" OFF )
-option( WITH_DOCS  "Install docs" OFF )
+option( WITH_APPS "Build applications" ON )
+option( WITH_DOCS  "Install docs" ON )
 
 set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
 

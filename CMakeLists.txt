@@ -58,4 +58,3 @@ ExternalProject_Add(OpenSSL
 add_executable(Dumb ./Dumb.cpp)
 add_dependencies(Dumb OpenSSL)
 install(TARGETS Dumb DESTINATION ${CMAKE_BINARY_DIR})
-

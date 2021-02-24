@@ -124,6 +124,7 @@ endif()
 if( WIN32 )
   set( CMAKE_SHARED_LIBRARY_PREFIX "lib" )
   set( CMAKE_STATIC_LIBRARY_PREFIX "lib" )
+  set( CMAKE_IMPORT_LIBRARY_PREFIX "lib" )
 endif()
 
 if( WIN32 AND NOT CYGWIN )

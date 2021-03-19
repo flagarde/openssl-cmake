@@ -29,6 +29,7 @@ if(PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR)
   message(FATAL_ERROR "In-source builds are not allowed")
 endif()
 
+message(STATUS "${CMAKE_INSTALL_PREFIX}")
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
   set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}/bin" CACHE PATH "Default Install Prefix" FORCE)
   message(STATUS "Install Prefix set to : ${CMAKE_INSTALL_PREFIX}")

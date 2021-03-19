@@ -22,7 +22,7 @@ cmake_minimum_required(VERSION 3.10...3.17.2)
 
 project(OpenSSL VERSION "1.0.0" LANGUAGES CXX DESCRIPTION "CMake to compile OpenSSL" HOMEPAGE_URL "https://github.com/flagarde/openssl-cmake")
 
-set(OPENSSL_TAG "1_1_1i" CACHE STRING "Version the OpenSSL to download")
+set(OPENSSL_TAG "1_1_1j" CACHE STRING "Version the OpenSSL to download")
 set(OPENSSL_URL "https://github.com/openssl/openssl/archive/OpenSSL_${OPENSSL_TAG}.zip" CACHE STRING "URL of the OpenSSL depot")
 
 if(PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR)

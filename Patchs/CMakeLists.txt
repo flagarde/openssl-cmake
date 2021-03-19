@@ -23,18 +23,13 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+project(OpenSSL DESCRIPTION "Cryptography and SSL/TLS Toolkit" HOMEPAGE_URL "https://www.openssl.org" LANGUAGES C)
 
 set( CMAKE_LEGACY_CYGWIN_WIN32 0 )
-project( openssl )
-cmake_minimum_required(VERSION 3.10.0...3.17.3 )
-
 set( CMAKE_DISABLE_SOURCE_CHANGES ON )
 set( CMAKE_DISABLE_IN_SOURCE_BUILD ON )
 
-set( CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" )
-
-option( WITH_APPS "Build applications" ON )
-option( WITH_DOCS  "Install docs" ON )
+set( CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${PROJECT_SOURCE_DIR}/cmake" )
 
 # OpenSSL version detection imported from FindOpenSSL.cmake
 
@@ -91,8 +86,6 @@ endif()
 
 set( OPENSSL_VERSION "${OPENSSL_VERSION_MAJOR}.${OPENSSL_VERSION_MINOR}.${OPENSSL_VERSION_FIX}${OPENSSL_VERSION_PATCH_STRING}" )
 
-message( STATUS "OpenSSL version ${OPENSSL_VERSION}" )
-
 set( VERSION_MAJOR ${OPENSSL_VERSION_MAJOR} )
 set( VERSION_MINOR ${OPENSSL_VERSION_MINOR} )
 set( VERSION_PATCH ${OPENSSL_VERSION_FIX} )
@@ -142,6 +135,7 @@ if( MINGW )
   set( CMAKE_SHARED_LINKER_FLAGS "-Wl,--export-all" )
 endif()
 
+set(CMAKE_REQUIRED_QUIET TRUE)
 include( CheckTypeSize )
 check_type_size( "long" LONG_INT )
 check_type_size( "long long" LONG_LONG_INT )
@@ -153,6 +147,7 @@ elseif( HAVE_LONG_LONG_INT AND (${LONG_LONG_INT} EQUAL 8) )
 else()
   set( THIRTY_TWO_BIT ON )
 endif()
+set(CMAKE_REQUIRED_QUIET FALSE)
 
 if( MSVC OR ( WIN32 AND MINGW AND NOT CYGWIN ) )
   set( OPENSSL_EXPORT_VAR_AS_FUNCTION 1 )
@@ -172,9 +167,11 @@ set( CONF "
 ${CONF}" )
 file( WRITE ${PROJECT_BINARY_DIR}/opensslconf.h.cmake "${CONF}" )
 
-configure_file( ${PROJECT_BINARY_DIR}/opensslconf.h.cmake
+if(NOT EXISTS "${PROJECT_BINARY_DIR}/include/openssl/opensslconf.h")
+  configure_file( ${PROJECT_BINARY_DIR}/opensslconf.h.cmake
   ${PROJECT_BINARY_DIR}/include/openssl/opensslconf.h )
 # End configure public headers
+endif()
 
 add_subdirectory(crypto)
 add_subdirectory(ssl)
@@ -186,6 +183,7 @@ endif()
 file( READ ${PROJECT_SOURCE_DIR}/c_rehash.cmake C_REHASH )
 string( REPLACE "@OPENSSLDIR@" "${OPENSSLDIR}" C_REHASH "${C_REHASH}" )
 string( REPLACE "@CMAKE_INSTALL_PREFIX@" "${CMAKE_INSTALL_PREFIX}" C_REHASH "${C_REHASH}" )
+
 file( WRITE ${PROJECT_BINARY_DIR}/c_rehash "${C_REHASH}" )
 
 file( GLOB PUBLIC_HEADERS "${PROJECT_BINARY_DIR}/include/openssl/*.h" )

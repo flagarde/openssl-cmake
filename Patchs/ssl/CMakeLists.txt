@@ -46,22 +46,24 @@ include_directories( BEFORE SYSTEM
 add_library( ssl ${LIBSRC} )
 
 target_include_directories( ssl PUBLIC ${PROJECT_BINARY_DIR}/include )
-
-target_link_libraries( ssl crypto )
+set_target_properties(ssl PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
+target_link_libraries( ssl OpenSSL::Crypto )
 
 set_target_properties( ssl PROPERTIES
   VERSION "${LIB_VERSION}" SOVERSION "${LIB_SOVERSION}" )
 
-if( ANDROID )
-  set_target_properties( ssl PROPERTIES OUTPUT_NAME "ssl" )
-endif()
 
 if( MSVC )
   if( CMAKE_SIZEOF_VOID_P EQUAL 8 )
     set_target_properties( ssl PROPERTIES OUTPUT_NAME "ssl64" )
+    add_library(OpenSSL::SSL ALIAS ssl64)
   elseif( CMAKE_SIZEOF_VOID_P EQUAL 4 )
     set_target_properties( ssl PROPERTIES OUTPUT_NAME "ssl32" )
+    add_library(OpenSSL::SSL ALIAS ssl32)
   endif()
+else()
+  set_target_properties( ssl PROPERTIES OUTPUT_NAME "ssl" )
+  add_library(OpenSSL::SSL ALIAS ssl)
 endif()
 
 install( TARGETS ssl

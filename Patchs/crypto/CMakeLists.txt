@@ -25,14 +25,18 @@
 
 include( CMakeParseArguments )
 
-string(TIMESTAMP BUILDINF_DATE "%Y-%m-%d %H:%M:%S UTC" UTC)
-configure_file( buildinf.h.cmake buildinf.h )
+if(NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/buildinf.h")
+  string(TIMESTAMP BUILDINF_DATE "%Y-%m-%d %H:%M:%S UTC" UTC)
+  configure_file( buildinf.h.cmake buildinf.h )
+endif()
 
+set(CMAKE_REQUIRED_QUIET TRUE)
 include( CheckIncludeFile )
 CHECK_INCLUDE_FILE( fcntl.h CHK_DLFCN )
 if( CHK_DLFCN )
   set( HAVE_DLFCN_H ON )
 endif()
+set(CMAKE_REQUIRED_QUIET FALSE)
 
 if( APPLE )
   set( DSO_DLFCN ON )
@@ -52,10 +56,15 @@ else()
   set( DSO_EXTENSION ".so" )
 endif()
 
-configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/bn_conf.h.cmake
+if(NOT EXISTS "${PROJECT_BINARY_DIR}/include/crypto/bn_conf.h")
+  configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/bn_conf.h.cmake
   ${PROJECT_BINARY_DIR}/include/crypto/bn_conf.h )
-configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/dso_conf.h.cmake
+endif()
+
+if(NOT EXISTS "${PROJECT_BINARY_DIR}/include/crypto/dso_conf.h")
+  configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/dso_conf.h.cmake
   ${PROJECT_BINARY_DIR}/include/crypto/dso_conf.h )
+endif()
 
 set( LIBSRC
   cpt_err.c cryptlib.c ctype.c cversion.c ebcdic.c ex_data.c init.c mem.c mem_clr.c mem_dbg.c mem_sec.c o_dir.c o_fips.c
@@ -269,7 +278,7 @@ add_submodule ( x509v3 pcy_cache.c pcy_data.c pcy_lib.c pcy_map.c pcy_node.c pcy
   v3_tlsf.c v3_utl.c v3err.c )
 
 set( CMAKE_THREAD_PREFER_PTHREAD TRUE )
-find_package ( Threads )
+find_package ( Threads QUIET)
 if( NOT Threads_FOUND )
   add_submodule ( . threads_none.c )
 elseif( WIN32 )
@@ -279,6 +288,7 @@ else()
 endif()
 
 add_library( crypto ${LIBSRC} ${OBJECTS_SRC} )
+set_target_properties(crypto PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
 
 target_include_directories( crypto PUBLIC ${PROJECT_BINARY_DIR}/include )
 
@@ -296,17 +306,19 @@ endif()
 set_target_properties( crypto PROPERTIES
   VERSION "${LIB_VERSION}" SOVERSION "${LIB_SOVERSION}" )
 
-if( ANDROID )
-  set_target_properties( crypto PROPERTIES OUTPUT_NAME "crypto" )
-endif()
-
 if( MSVC )
   if( CMAKE_SIZEOF_VOID_P EQUAL 8 )
     set_target_properties( crypto PROPERTIES OUTPUT_NAME "crypto64" )
+    add_library(OpenSSL::Crypto ALIAS crypto64)
   elseif( CMAKE_SIZEOF_VOID_P EQUAL 4 )
     set_target_properties( crypto PROPERTIES OUTPUT_NAME "crypto32" )
+    add_library(OpenSSL::Crypto ALIAS crypto32)
   endif()
+else()
+  set_target_properties( crypto PROPERTIES OUTPUT_NAME "crypto" )
+  add_library(OpenSSL::Crypto ALIAS crypto)
 endif()
+
 
 install( TARGETS crypto
     RUNTIME DESTINATION bin

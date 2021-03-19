@@ -23,15 +23,9 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-file( READ ${CMAKE_CURRENT_SOURCE_DIR}/CA.pl.cmake CA_PL )
-file( WRITE ${CMAKE_CURRENT_BINARY_DIR}/CA.pl "${CA_PL}" )
-
-file( READ ${CMAKE_CURRENT_SOURCE_DIR}/tsget.cmake TSGET )
-string( REPLACE "@VERSION_STRING@" "${VERSION_STRING}" TSGET "${TSGET}" )
-file( WRITE ${CMAKE_CURRENT_BINARY_DIR}/tsget "${TSGET}" )
-
-file( READ ${CMAKE_CURRENT_SOURCE_DIR}/progs.h.cmake PROGS_H )
-file( WRITE ${CMAKE_CURRENT_BINARY_DIR}/progs.h "${PROGS_H}" )
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/CA.pl.cmake" "${CMAKE_CURRENT_BINARY_DIR}/CA.pl" COPYONLY)
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/tsget.cmake" "${CMAKE_CURRENT_BINARY_DIR}/tsget" @ONLY)
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/progs.h.cmake" "${CMAKE_CURRENT_BINARY_DIR}/progs.h" COPYONLY)
 
 add_definitions( -DMONOLITH )
 
@@ -54,7 +48,7 @@ endif()
 
 add_executable( openssl ${E_SRC} )
 
-target_link_libraries( openssl crypto ssl )
+target_link_libraries( openssl OpenSSL::SSL OpenSSL::Crypto )
 
 install( TARGETS openssl
     RUNTIME DESTINATION bin )

@@ -20,46 +20,61 @@
 # SOFTWARE.
 cmake_minimum_required(VERSION 3.15...3.19.7)
 
-project(OpenSSL VERSION "1.0.0" LANGUAGES CXX DESCRIPTION "CMake to compile OpenSSL" HOMEPAGE_URL "https://github.com/flagarde/openssl-cmake")
+set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
-if(OPENSSL_VERSION)
-  string(REPLACE "." "_" OPENSSL_VERSION ${OPENSSL_VERSION})
-else()
-   set(OPENSSL_VERSION "1_1_1j" CACHE STRING "Version the OpenSSL to download")
+include(GetCMakeMM)
+cmmm(VERSION "1.0" REPOSITORY "flagarde/CMakeMM" PROVIDER "gitlab" VERBOSITY VERBOSE DESTINATION "CMakeMM")
+
+cmmm_modules_list(REPOSITORY "flagarde/CMakeCM" PROVIDER "gitlab" DESTINATION "Modules" BRANCH "main")
+
+project(openssl-cmake VERSION "1.0.0" LANGUAGES C CXX DESCRIPTION "CMake to compile OpenSSL" HOMEPAGE_URL "https://github.com/flagarde/openssl-cmake")
+
+include(CPM)
+cpm()
+
+if(NOT DEFINED OPENSSL_VERSION)
+  set(OPENSSL_VERSION "1.1.1j" CACHE STRING "Version the OpenSSL to download")  
 endif()
-set(OPENSSL_URL "https://github.com/openssl/openssl/archive/OpenSSL_${OPENSSL_VERSION}.zip" CACHE STRING "URL of the OpenSSL depot")
 
-if(PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR)
-  message(FATAL_ERROR "In-source builds are not allowed")
+if(NOT DEFINED OPENSSL_URL)
+  set(OPENSSL_URL "https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz" CACHE STRING "OpenSSL URL")
 endif()
 
-message(STATUS "${CMAKE_INSTALL_PREFIX}")
-if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-  set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}/openssl-${OPENSSL_TAG}" CACHE PATH "Default Install Prefix" FORCE)
-  message(STATUS "Install Prefix set to : ${CMAKE_INSTALL_PREFIX}")
+if(NOT DEFINED OPENSSL_URL_HASH)
+  set(OPENSSL_URL_HASH "SHA256=aaf2fcb575cdf6491b98ab4829abf78a3dec8402b8b81efc8f23c00d443981bf" CACHE STRING "OpenSSL URL_HASH")
 endif()
 
 if(NOT DEFINED WITH_APPS)
-  option( WITH_APPS "Build applications" ON )
+  option( WITH_APPS "Build applications" ON)
 endif()
 
 if(NOT DEFINED WITH_DOCS)
-  option( WITH_DOCS  "Install docs" ON )
+  option( WITH_DOCS  "Install docs" ON)
 endif()
 
-set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
+if(NOT DEFINED WITH_TESTS)
+  option( WITH_TESTS  "Build tests" ON)
+endif()
 
-include(ExternalProject)
-# ----- OpenSSL package -----
-ExternalProject_Add(OpenSSL
-                    URL ${OPENSSL_URL}
-                    PREFIX ${CMAKE_BINARY_DIR}
-                    INSTALL_DIR ${CMAKE_INSTALL_PREFIX}
-                    LOG_DOWNLOAD ON
-                    CMAKE_ARGS -DCMAKE_POSITION_INDEPENDENT_CODE=${CMAKE_POSITION_INDEPENDENT_CODE} -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX} -DWITH_APPS=${WITH_APPS} -DWITH_DOCS=${WITH_DOCS}
-                    PATCH_COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/patch" "${CMAKE_BINARY_DIR}/src/OpenSSL"
-                   )
+include(PreventInSourceBuilds)
+prevent_in_source_builds()
 
-add_executable(Dumb ./Dumb.cpp)
-add_dependencies(Dumb OpenSSL)
-install(TARGETS Dumb DESTINATION ${CMAKE_BINARY_DIR})
+include(DefaultInstallPrefix)
+default_install_prefix("${PROJECT_SOURCE_DIR}/openssl-${OPENSSL_VERSION}")
+
+CPMAddPackage(NAME OpenSSL
+              VERSION "${OPENSSL_VERSION}"
+              URL "${OPENSSL_URL}"
+              URL_HASH "${OPENSSL_URL_HASH}"
+              DOWNLOAD_ONLY TRUE
+              FETCHCONTENT_UPDATES_DISCONNECTED "${IS_OFFLINE}")
+
+if(OpenSSL_ADDED)
+  file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/Patchs/" DESTINATION "${OpenSSL_SOURCE_DIR}/")
+  add_subdirectory("${OpenSSL_SOURCE_DIR}")
+endif()
+
+if(WITH_TESTS)
+  include(CTest)
+  add_subdirectory(tests)
+endif()

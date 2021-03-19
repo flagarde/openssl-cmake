@@ -70,7 +70,7 @@ CPMAddPackage(NAME OpenSSL
               FETCHCONTENT_UPDATES_DISCONNECTED "${IS_OFFLINE}")
 
 if(OpenSSL_ADDED)
-  file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/Patchs/" DESTINATION "${OpenSSL_SOURCE_DIR}/")
+  file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/patchs/" DESTINATION "${OpenSSL_SOURCE_DIR}/")
   add_subdirectory("${OpenSSL_SOURCE_DIR}")
 endif()
 

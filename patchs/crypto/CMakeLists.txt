@@ -309,17 +309,15 @@ set_target_properties( crypto PROPERTIES
 if( MSVC )
   if( CMAKE_SIZEOF_VOID_P EQUAL 8 )
     set_target_properties( crypto PROPERTIES OUTPUT_NAME "crypto64" )
-    add_library(OpenSSL::Crypto ALIAS crypto64)
   elseif( CMAKE_SIZEOF_VOID_P EQUAL 4 )
     set_target_properties( crypto PROPERTIES OUTPUT_NAME "crypto32" )
-    add_library(OpenSSL::Crypto ALIAS crypto32)
   endif()
 else()
   set_target_properties( crypto PROPERTIES OUTPUT_NAME "crypto" )
-  add_library(OpenSSL::Crypto ALIAS crypto)
 endif()
 
-
+add_library(OpenSSL::Crypto ALIAS crypto)
+  
 install( TARGETS crypto
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib

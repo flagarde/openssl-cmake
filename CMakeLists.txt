@@ -23,11 +23,11 @@ cmake_minimum_required(VERSION 3.15...3.19.7)
 project(OpenSSL VERSION "1.0.0" LANGUAGES CXX DESCRIPTION "CMake to compile OpenSSL" HOMEPAGE_URL "https://github.com/flagarde/openssl-cmake")
 
 if(OPENSSL_VERSION)
-  string(REPLACE "." "_" OPENSSL_TAG ${OPENSSL_VER})
+  string(REPLACE "." "_" OPENSSL_VERSION ${OPENSSL_VERSION})
 else()
-   set(OPENSSL_TAG "1_1_1j" CACHE STRING "Version the OpenSSL to download")
+   set(OPENSSL_VERSION "1_1_1j" CACHE STRING "Version the OpenSSL to download")
 endif()
-set(OPENSSL_URL "https://github.com/openssl/openssl/archive/OpenSSL_${OPENSSL_TAG}.zip" CACHE STRING "URL of the OpenSSL depot")
+set(OPENSSL_URL "https://github.com/openssl/openssl/archive/OpenSSL_${OPENSSL_VERSION}.zip" CACHE STRING "URL of the OpenSSL depot")
 
 if(PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR)
   message(FATAL_ERROR "In-source builds are not allowed")
@@ -39,8 +39,13 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
   message(STATUS "Install Prefix set to : ${CMAKE_INSTALL_PREFIX}")
 endif()
 
-option( WITH_APPS "Build applications" ON )
-option( WITH_DOCS  "Install docs" ON )
+if(NOT DEFINED WITH_APPS)
+  option( WITH_APPS "Build applications" ON )
+endif()
+
+if(NOT DEFINED WITH_DOCS)
+  option( WITH_DOCS  "Install docs" ON )
+endif()
 
 set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
 

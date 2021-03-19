@@ -124,6 +124,7 @@ endif()
 if( WIN32 )
   set( CMAKE_SHARED_LIBRARY_PREFIX "lib" )
   set( CMAKE_STATIC_LIBRARY_PREFIX "lib" )
+  set( CMAKE_IMPORT_LIBRARY_PREFIX "lib" )
 endif()
 
 if( WIN32 AND NOT CYGWIN )
@@ -193,7 +194,7 @@ install( FILES ${PUBLIC_HEADERS} DESTINATION include/openssl )
 install( FILES
   ${PROJECT_BINARY_DIR}/c_rehash
   DESTINATION share/openssl )
-  
+
 if( WITH_DOCS )
   install( FILES
   FAQ LICENSE README README.ENGINE

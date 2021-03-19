@@ -22,7 +22,11 @@ cmake_minimum_required(VERSION 3.15...3.19.7)
 
 project(OpenSSL VERSION "1.0.0" LANGUAGES CXX DESCRIPTION "CMake to compile OpenSSL" HOMEPAGE_URL "https://github.com/flagarde/openssl-cmake")
 
-set(OPENSSL_TAG "1_1_1j" CACHE STRING "Version the OpenSSL to download")
+if(OPENSSL_VER)
+  string(REPLACE "." "_" OPENSSL_TAG ${OPENSSL_VER})
+else()
+   set(OPENSSL_TAG "1_1_1j" CACHE STRING "Version the OpenSSL to download")
+endif()
 set(OPENSSL_URL "https://github.com/openssl/openssl/archive/OpenSSL_${OPENSSL_TAG}.zip" CACHE STRING "URL of the OpenSSL depot")
 
 if(PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR)
@@ -31,7 +35,7 @@ endif()
 
 message(STATUS "${CMAKE_INSTALL_PREFIX}")
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-  set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}/bin" CACHE PATH "Default Install Prefix" FORCE)
+  set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}/openssl-${OPENSSL_TAG}" CACHE PATH "Default Install Prefix" FORCE)
   message(STATUS "Install Prefix set to : ${CMAKE_INSTALL_PREFIX}")
 endif()
 
@@ -54,4 +58,3 @@ ExternalProject_Add(OpenSSL
 add_executable(Dumb ./Dumb.cpp)
 add_dependencies(Dumb OpenSSL)
 install(TARGETS Dumb DESTINATION ${CMAKE_BINARY_DIR})
-

@@ -18,7 +18,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-cmake_minimum_required(VERSION 3.10...3.17.2)
+cmake_minimum_required(VERSION 3.15...3.19.7)
 
 project(OpenSSL VERSION "1.0.0" LANGUAGES CXX DESCRIPTION "CMake to compile OpenSSL" HOMEPAGE_URL "https://github.com/flagarde/openssl-cmake")
 
@@ -27,13 +27,13 @@ if(OPENSSL_VER)
 else()
    set(OPENSSL_TAG "1_1_1j" CACHE STRING "Version the OpenSSL to download")
 endif()
-
 set(OPENSSL_URL "https://github.com/openssl/openssl/archive/OpenSSL_${OPENSSL_TAG}.zip" CACHE STRING "URL of the OpenSSL depot")
 
 if(PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR)
   message(FATAL_ERROR "In-source builds are not allowed")
 endif()
 
+message(STATUS "${CMAKE_INSTALL_PREFIX}")
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
   set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}/openssl-${OPENSSL_TAG}" CACHE PATH "Default Install Prefix" FORCE)
   message(STATUS "Install Prefix set to : ${CMAKE_INSTALL_PREFIX}")

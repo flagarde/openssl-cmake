@@ -23,7 +23,7 @@ cmake_minimum_required(VERSION 3.15...3.19.7)
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 include(GetCMakeMM)
-cmmm(VERSION "1.0" REPOSITORY "flagarde/CMakeMM" PROVIDER "gitlab" VERBOSITY VERBOSE DESTINATION "CMakeMM")
+cmmm(VERSION "1.1" REPOSITORY "flagarde/CMakeMM" PROVIDER "gitlab" VERBOSITY VERBOSE DESTINATION "CMakeMM")
 
 cmmm_modules_list(REPOSITORY "flagarde/CMakeCM" PROVIDER "gitlab" DESTINATION "Modules" BRANCH "main")
 

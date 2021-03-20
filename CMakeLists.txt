@@ -13,15 +13,15 @@ include(CPM)
 cpm()
 
 if(NOT DEFINED OPENSSL_VERSION)
-  set(OPENSSL_VERSION "1.1.1j" CACHE STRING "Version the OpenSSL to download")  
+  set(OPENSSL_VERSION "1.1.1j")  
 endif()
 
 if(NOT DEFINED OPENSSL_URL)
-  set(OPENSSL_URL "https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz" CACHE STRING "OpenSSL URL")
+  set(OPENSSL_URL "https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz")
 endif()
 
 if(NOT DEFINED OPENSSL_URL_HASH)
-  set(OPENSSL_URL_HASH "SHA256=aaf2fcb575cdf6491b98ab4829abf78a3dec8402b8b81efc8f23c00d443981bf" CACHE STRING "OpenSSL URL_HASH")
+  set(OPENSSL_URL_HASH "SHA256=aaf2fcb575cdf6491b98ab4829abf78a3dec8402b8b81efc8f23c00d443981bf")
 endif()
 
 if(NOT DEFINED WITH_APPS)

@@ -39,9 +39,6 @@ endif()
 include(PreventInSourceBuilds)
 prevent_in_source_builds()
 
-include(DefaultInstallPrefix)
-default_install_prefix("${PROJECT_SOURCE_DIR}/openssl-${OPENSSL_VERSION}")
-
 CPMAddPackage(NAME OpenSSL
               VERSION "${OPENSSL_VERSION}"
               URL "${OPENSSL_URL}"

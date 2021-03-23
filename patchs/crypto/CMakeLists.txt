@@ -289,6 +289,7 @@ endif()
 
 add_library( crypto ${LIBSRC} ${OBJECTS_SRC} )
 set_target_properties(crypto PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
+set_target_properties(crypto PROPERTIES C_EXTENSIONS TRUE)
 
 target_include_directories( crypto PUBLIC ${PROJECT_BINARY_DIR}/include )
 

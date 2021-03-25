@@ -13,7 +13,7 @@ include(CPM)
 cpm()
 
 if(NOT DEFINED OPENSSL_VERSION)
-  set(OPENSSL_VERSION "1.1.1j")  
+  set(OPENSSL_VERSION "1.1.1k")  
 endif()
 
 if(NOT DEFINED OPENSSL_URL)

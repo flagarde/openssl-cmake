@@ -100,12 +100,10 @@ add_definitions( -DOPENSSL_NO_STATIC_ENGINE )
 if( MSVC )
   include( MSVCRuntime )
   configure_msvc_runtime()
-  set( OPENSSLDIR "C:/ssl" )
-  set( ENGINESDIR "C:/engines-1.1" )
-else()
-  set( OPENSSLDIR "/usr/local/ssl" )
-  set( ENGINESDIR "/usr/local/engines-1.1" )
 endif()
+
+set( OPENSSLDIR "${CMAKE_INSTALL_PREFIX}/ssl" )
+set( ENGINESDIR "${CMAKE_INSTALL_PREFIX}/engines-1.1" )
 add_definitions( "-DOPENSSLDIR=\"${OPENSSLDIR}\"" )
 add_definitions( "-DENGINESDIR=\"${ENGINESDIR}\"" )
 
@@ -178,13 +176,22 @@ add_subdirectory(ssl)
 
 if(WITH_APPS AND NOT ANDROID AND NOT IOS)
   add_subdirectory(apps)
+
+  file( READ ${PROJECT_SOURCE_DIR}/c_rehash.cmake C_REHASH )
+  string( REPLACE "@OPENSSLDIR@" "${OPENSSLDIR}" C_REHASH "${C_REHASH}" )
+  string( REPLACE "@CMAKE_INSTALL_PREFIX@" "${CMAKE_INSTALL_PREFIX}" C_REHASH "${C_REHASH}" )
+
+  file( WRITE ${PROJECT_BINARY_DIR}/c_rehash "${C_REHASH}" )
+
+  install( FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/apps/openssl.cnf
+    ${CMAKE_CURRENT_SOURCE_DIR}/apps/ct_log_list.cnf
+    DESTINATION ssl )
+  install( CODE "FILE(MAKE_DIRECTORY \$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/ssl/certs)" )
+  install( CODE "FILE(MAKE_DIRECTORY \$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/ssl/misc)" )
+  install( CODE "FILE(MAKE_DIRECTORY \$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/ssl/private)" )
+  install( FILES ${PROJECT_BINARY_DIR}/c_rehash DESTINATION bin )
 endif()
-
-file( READ ${PROJECT_SOURCE_DIR}/c_rehash.cmake C_REHASH )
-string( REPLACE "@OPENSSLDIR@" "${OPENSSLDIR}" C_REHASH "${C_REHASH}" )
-string( REPLACE "@CMAKE_INSTALL_PREFIX@" "${CMAKE_INSTALL_PREFIX}" C_REHASH "${C_REHASH}" )
-
-file( WRITE ${PROJECT_BINARY_DIR}/c_rehash "${C_REHASH}" )
 
 file( GLOB PUBLIC_HEADERS "${PROJECT_BINARY_DIR}/include/openssl/*.h" )
 install( FILES ${PUBLIC_HEADERS} DESTINATION include/openssl )

@@ -24,7 +24,7 @@ jobs:
 
     steps:
     - name: 🚀 Checkout
-      uses: actions/checkout@v2.3.2
+      uses: actions/checkout@v2.3.4
 
     - name: ➕ Install cmake
       uses: jwlawson/actions-setup-cmake@v1.4

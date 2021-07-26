@@ -1,4 +1,4 @@
-name: Linux GCC
+name: MacOS Clang
 
 env:
   CMAKE_VERSION: 3.16.x
@@ -13,12 +13,7 @@ jobs:
   # Checkout apply clang-format and upload artifact
   build:
     name: "Build"
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        compiler-version: [[gcc-9, g++-9], [gcc-10, g++-10]]
-
+    runs-on: macos-latest
     steps:
 
     - name: Checkout
@@ -28,18 +23,9 @@ jobs:
       uses: jwlawson/actions-setup-cmake@v1.9
       with:
         cmake-version: '${{env.CMAKE_VERSION}}'
-        
-    - name: Install elog
-      run: sudo apt-get install elog
 
-    - name: Run elogd
-      run: sudo elogd -p 4444 -x -D
-      
     - name: Configure
-      env:
-        CC: ${{ matrix.compiler-version[0] }}
-        CXX: ${{ matrix.compiler-version[1] }}
-      run: cmake -S ${{ github.workspace }} -B ${{ env.CMAKE_BUILD_PREFIX }} -D CMAKE_BUILD_TYPE=${{ env.CMAKE_BUILD_TYPE }}
+      run: cmake -S ${{ github.workspace }} -B ${{ env.CMAKE_BUILD_PREFIX }} -D CMAKE_BUILD_TYPE=${{ env.CMAKE_BUILD_TYPE }} -D BUILD_TESTS=OFF
 
     - name: Build
       run: cmake --build ${{ env.CMAKE_BUILD_PREFIX }} --config ${{ env.CMAKE_BUILD_TYPE }} --parallel 2

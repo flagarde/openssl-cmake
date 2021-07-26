@@ -1,0 +1,46 @@
+name: Docs
+
+on:
+    push:
+    pull_request:
+
+env:
+  CMAKE_VERSION: 3.16.x
+  CMAKE_BUILD_TYPE: Release
+  CMAKE_BUILD_PREFIX: "${{ github.workspace }}/build"
+
+jobs:
+  docs:
+
+    runs-on: macos-latest
+
+    steps:
+    - name: Install required packages
+      run: brew install doxygen
+        && brew install sphinx-doc
+        && pip3 install sphinx-rtd-theme
+        && pip3 install breathe
+        && pip3 install sphinx-sitemap
+
+    - name: Checkout
+      uses: actions/checkout@v2.3.4
+
+    - name: Install cmake
+      uses: jwlawson/actions-setup-cmake@v1.9
+      with:
+        cmake-version: '${{env.CMAKE_VERSION}}'
+        github-api-token: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Configure
+      run: cmake -S ${{ github.workspace }} -B ${{ env.CMAKE_BUILD_PREFIX }} -D CMAKE_BUILD_TYPE=${{ env.CMAKE_BUILD_TYPE }}
+        && cmake --build ${{ env.CMAKE_BUILD_PREFIX }} --config ${{ env.CMAKE_BUILD_TYPE }} --parallel 2 --target docs
+        && cmake --install ${{ env.CMAKE_BUILD_PREFIX }} --prefix ${{ github.workspace }}/bin --strip
+        && touch ${{ github.workspace }}/bin/docs/html/.nojekyll
+
+    - name: Deploy docs
+      uses: JamesIves/github-pages-deploy-action@releases/v3
+      with:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        BRANCH: gh-pages # The branch the action should deploy to.
+        FOLDER: ${{ github.workspace }}/bin/docs/html # The folder the action should deploy.
+        SINGLE_COMMIT: true

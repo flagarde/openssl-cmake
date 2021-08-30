@@ -20,10 +20,10 @@ sub read_body {
     my $return_data = "";
     my $data_len = length ${$state->{data}};
     if ($state->{bytes} < $data_len) {
-	$data_len = $data_len - $state->{bytes};
-	$data_len = $maxlength if $data_len > $maxlength;
-	$return_data = substr ${$state->{data}}, $state->{bytes}, $data_len;
-	$state->{bytes} += $data_len;
+  $data_len = $data_len - $state->{bytes};
+  $data_len = $maxlength if $data_len > $maxlength;
+  $return_data = substr ${$state->{data}}, $state->{bytes}, $data_len;
+  $state->{bytes} += $data_len;
     }
     return $return_data;
 }
@@ -100,19 +100,18 @@ sub get_timestamp {
     my $error_string;
     if ($error_code != 0) {
         my $http_code = $curl->getinfo(CURLINFO_HTTP_CODE);
-	$error_string = "could not get timestamp";
-	$error_string .= ", http code: $http_code" unless $http_code == 0;
-	$error_string .= ", curl code: $error_code";
-	$error_string .= " ($::error_buf)" if defined($::error_buf);
+  $error_string = "could not get timestamp";
+  $error_string .= ", http code: $http_code" unless $http_code == 0;
+  $error_string .= ", curl code: $error_code";
+  $error_string .= " ($::error_buf)" if defined($::error_buf);
     } else {
         my $ct = $curl->getinfo(CURLINFO_CONTENT_TYPE);
-	if (lc($ct) ne "application/timestamp-reply"
-	    && lc($ct) ne "application/timestamp-response") {
-	    $error_string = "unexpected content type returned: $ct";
+  if (lc($ct) ne "application/timestamp-reply"
+      && lc($ct) ne "application/timestamp-response") {
+      $error_string = "unexpected content type returned: $ct";
         }
     }
     return ($ts_body, $error_string);
-
 }
 
 # Print usage information and exists.
@@ -162,15 +161,15 @@ REQUEST: foreach (@ARGV) {
     # Read request.
     my $body;
     if ($input eq "-") {
-	# Read the request from STDIN;
-	$body = <STDIN>;
+  # Read the request from STDIN;
+  $body = <STDIN>;
     } else {
-	# Read the request from file.
+  # Read the request from file.
         open INPUT, "<" . $input
-	    or warn("$input: could not open input file: $!\n"), next REQUEST;
+      or warn("$input: could not open input file: $!\n"), next REQUEST;
         $body = <INPUT>;
         close INPUT
-	    or warn("$input: could not close input file: $!\n"), next REQUEST;
+      or warn("$input: could not close input file: $!\n"), next REQUEST;
     }
 
     # Send request.
@@ -178,21 +177,21 @@ REQUEST: foreach (@ARGV) {
 
     my ($ts_body, $error) = get_timestamp $curl, \$body;
     if (defined($error)) {
-	die "$input: fatal error: $error\n";
+  die "$input: fatal error: $error\n";
     }
     STDERR->printflush(", reply received") if $options{v};
 
     # Write response.
     if ($output eq "-") {
-	# Write to STDOUT.
+  # Write to STDOUT.
         print $ts_body;
     } else {
-	# Write to file.
+  # Write to file.
         open OUTPUT, ">", $output
-	    or warn("$output: could not open output file: $!\n"), next REQUEST;
+      or warn("$output: could not open output file: $!\n"), next REQUEST;
         print OUTPUT $ts_body;
         close OUTPUT
-	    or warn("$output: could not close output file: $!\n"), next REQUEST;
+      or warn("$output: could not close output file: $!\n"), next REQUEST;
     }
     STDERR->printflush(", $output written.\n") if $options{v};
 }

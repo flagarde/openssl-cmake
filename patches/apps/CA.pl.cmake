@@ -51,13 +51,13 @@ my $FILE;
 sub extra_args {
     my ($args_ref, $arg_prefix) = @_;
     my %eargs = map {
-	if ($_ < $#$args_ref) {
-	    my ($arg, $value) = splice(@$args_ref, $_, 2);
-	    $arg =~ s/$arg_prefix//;
-	    ($arg, $value);
-	} else {
-	    ();
-	}
+  if ($_ < $#$args_ref) {
+      my ($arg, $value) = splice(@$args_ref, $_, 2);
+      $arg =~ s/$arg_prefix//;
+      ($arg, $value);
+  } else {
+      ();
+  }
     } reverse grep($$args_ref[$_] =~ /$arg_prefix/, 0..$#$args_ref);
     my %empty = map { ($_, "") } @OPENSSL_CMDS;
     return (%empty, %eargs);

@@ -1,42 +1,48 @@
-name: MacOS GCC
+name: 'MacOS GCC'
 
 env:
-  CMAKE_VERSION: 3.16.x
-  CMAKE_BUILD_TYPE: Release
-  CMAKE_BUILD_PREFIX: "${{ github.workspace }}/build"
+  CMAKE_VERSION: '3.16.x'
+  CMAKE_BUILD_TYPE: 'Release'
+  CMAKE_BUILD_PREFIX: './build'
 
 on:
-    push:
-    pull_request:
+  push:
+  pull_request:
 
 jobs:
-  # Checkout apply clang-format and upload artifact
   build:
-    name: "Build"
     runs-on: macos-latest
     strategy:
       fail-fast: false
       matrix:
-        compiler-version: [[gcc-9, g++-9], [gcc-10, g++-10], [gcc-11, g++-11]]
+        include:
+          - { icon: '🟨', cc: gcc-9, cxx: g++-9, name: 'GCC 9' }
+          - { icon: '🟦', cc: gcc-10, cxx: g++-10, name: 'GCC 10' }
+          - { icon: '🟩', cc: gcc-11,  cxx: g++-11, name: 'GCC 11' }
+    name: '🚧 ${{ matrix.icon }} ${{ matrix.name }}'
 
     steps:
 
-    - name: Checkout
+    - name: '🧰 Checkout'
       uses: actions/checkout@v2.3.4
+      with:
+        fetch-depth: 0
 
-    - name: Setup CMake
+    - name: '${{ matrix.icon }} Setup CMake'
       uses: jwlawson/actions-setup-cmake@v1.10
       with:
         cmake-version: '${{env.CMAKE_VERSION}}'
+        github-api-token: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Configure
+    - name: '🔧 Configure'
       env:
-        CC: ${{ matrix.compiler-version[0] }}
-        CXX: ${{ matrix.compiler-version[1] }}
-      run: cmake -S ${{ github.workspace }} -B ${{ env.CMAKE_BUILD_PREFIX }} -D CMAKE_BUILD_TYPE=${{ env.CMAKE_BUILD_TYPE }} -D BUILD_TESTS=OFF
-    - name: Build
+        CC: ${{matrix.cc}}
+        CXX: ${{matrix.cxx}}
+      run: cmake -S . -B ${{ env.CMAKE_BUILD_PREFIX }} -D CMAKE_BUILD_TYPE=${{ env.CMAKE_BUILD_TYPE }}
+
+    - name: '⚙️ Build'
       run: cmake --build ${{ env.CMAKE_BUILD_PREFIX }} --config ${{ env.CMAKE_BUILD_TYPE }} --parallel 2
 
-    - name: Run tests
+    - name: '🧪 Run tests'
       working-directory: ${{ env.CMAKE_BUILD_PREFIX }}
       run: ctest -C ${{ env.CMAKE_BUILD_TYPE }} -j2 -VV --output-on-failure

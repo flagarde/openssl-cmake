@@ -1,43 +1,50 @@
-name: Docs
-
-on:
-    push:
-    pull_request:
+name: 'Docs'
 
 env:
-  CMAKE_VERSION: 3.16.x
-  CMAKE_BUILD_TYPE: Release
-  CMAKE_BUILD_PREFIX: "${{ github.workspace }}/build"
+  CMAKE_VERSION: '3.16.x'
+  CMAKE_BUILD_TYPE: 'Release'
+  CMAKE_BUILD_PREFIX: './build'
+
+on:
+  push:
+  pull_request:
 
 jobs:
   docs:
-
     runs-on: macos-latest
+    name: '📚 Docs'
 
     steps:
-    - name: Install required packages
+
+    - name: '🧰 Checkout'
+      uses: actions/checkout@v2.3.4
+      with:
+        fetch-depth: 0
+
+    - name: '🟨 Install required packages'
       run: brew install doxygen
         && brew install sphinx-doc
         && pip3 install sphinx-rtd-theme
         && pip3 install breathe
         && pip3 install sphinx-sitemap
 
-    - name: Checkout
-      uses: actions/checkout@v2.3.4
-
-    - name: Install cmake
+    - name: '🟨 Setup CMake'
       uses: jwlawson/actions-setup-cmake@v1.10
       with:
         cmake-version: '${{env.CMAKE_VERSION}}'
         github-api-token: ${{ secrets.GITHUB_TOKEN }}
-        
-    - name: Configure
-      run: cmake -S ${{ github.workspace }} -B ${{ env.CMAKE_BUILD_PREFIX }} -D CMAKE_BUILD_TYPE=${{ env.CMAKE_BUILD_TYPE }}
-        && cmake --build ${{ env.CMAKE_BUILD_PREFIX }} --config ${{ env.CMAKE_BUILD_TYPE }} --parallel 2 --target docs
-        && cmake --install ${{ env.CMAKE_BUILD_PREFIX }} --prefix ${{ github.workspace }}/bin --strip
+
+    - name: '🔧 Configure'
+      run: cmake -S . -B ${{ env.CMAKE_BUILD_PREFIX }} -D CMAKE_BUILD_TYPE=${{ env.CMAKE_BUILD_TYPE }}
+
+    - name: '⚙️ Build'
+      run: cmake --build ${{ env.CMAKE_BUILD_PREFIX }} --config ${{ env.CMAKE_BUILD_TYPE }} --parallel 2 --target docs
+
+    - name: '📥 Install'
+      run: cmake --install ${{ env.CMAKE_BUILD_PREFIX }} --prefix ${{ github.workspace }}/bin --strip
         && touch ${{ github.workspace }}/bin/docs/html/.nojekyll
 
-    - name: Deploy docs
+    - name: '🎉 Deploy'
       uses: JamesIves/github-pages-deploy-action@releases/v3
       with:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

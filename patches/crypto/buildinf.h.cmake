@@ -3,4 +3,3 @@
 #define PLATFORM "platform: @CMAKE_SYSTEM_NAME@"
 #define DATE "built on: @BUILDINF_DATE@"
 static const char *compiler_flags = CFLAGS;
-

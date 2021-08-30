@@ -318,7 +318,7 @@ else()
 endif()
 
 add_library(OpenSSL::Crypto ALIAS crypto)
-  
+
 install( TARGETS crypto
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib

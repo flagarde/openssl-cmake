@@ -1,10 +1,8 @@
-
 # This is a CMake toolchain file so we can run Mingw64 to build a Windows64 binaries.
 # http://vtk.org/Wiki/CMake_Cross_Compiling
 
 # usage
 # cmake -DCMAKE_TOOLCHAIN_FILE=./toolchain-mingw64.cmake ../
-
 
 set( CMAKE_SYSTEM_NAME Windows )
 set( CMAKE_SYSTEM_PROCESSOR x86_64 )
@@ -32,4 +30,3 @@ set( CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER )
 # for libraries and headers in the target directories
 set( CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY )
 set( CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY )
-

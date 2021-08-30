@@ -1,4 +1,3 @@
-
 # This is a CMake toolchain file so we can using Mingw to build Windows32 binaries.
 # http://vtk.org/Wiki/CMake_Cross_Compiling
 
@@ -31,4 +30,3 @@ set( CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER )
 # for libraries and headers in the target directories
 set( CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY )
 set( CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY )
-

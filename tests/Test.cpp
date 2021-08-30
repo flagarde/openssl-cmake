@@ -96,7 +96,7 @@ int main() {
 
     uchar romid[8] = {0x4C,0x42,0xd6,0x05,0x00,0x00,0x00,0x9a}; //My Device ID
     uchar page0[32]; memset(page0, 0xFF, sizeof(page0));
-    uchar buffer[32]; for(uchar x=0;x<32;x++) buffer[x]=x; //0,1 .. 31 //32bytes  
+    uchar buffer[32]; for(uchar x=0;x<32;x++) buffer[x]=x; //0,1 .. 31 //32bytes
     uchar page[1] = {0};
     uchar manid[2] = {0,0};
     uchar input_buff[75];

@@ -13,7 +13,7 @@ include(CPM)
 cpm()
 
 if(NOT DEFINED OPENSSL_VERSION)
-  set(OPENSSL_VERSION "1.1.1k")  
+  set(OPENSSL_VERSION "1.1.1k")
 endif()
 
 if(NOT DEFINED OPENSSL_URL)
@@ -47,7 +47,7 @@ CPMAddPackage(NAME OpenSSL
               FETCHCONTENT_UPDATES_DISCONNECTED "${IS_OFFLINE}")
 
 if(OpenSSL_ADDED)
-  file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/patchs/" DESTINATION "${OpenSSL_SOURCE_DIR}/")
+  file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/patches/" DESTINATION "${OpenSSL_SOURCE_DIR}/")
   add_subdirectory("${OpenSSL_SOURCE_DIR}" "${OpenSSL_BINARY_DIR}")
 endif()
 

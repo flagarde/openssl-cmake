@@ -48,6 +48,7 @@ CPMAddPackage(NAME OpenSSL
 
 if(OpenSSL_ADDED)
   file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/patches/" DESTINATION "${OpenSSL_SOURCE_DIR}/")
+  file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/include/" DESTINATION "${OpenSSL_SOURCE_DIR}/include")
   add_subdirectory("${OpenSSL_SOURCE_DIR}" "${OpenSSL_BINARY_DIR}")
 endif()
 

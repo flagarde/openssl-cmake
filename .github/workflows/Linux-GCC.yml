@@ -28,7 +28,7 @@ jobs:
         fetch-depth: 0
 
     - name: '${{ matrix.icon }} Setup CMake'
-      uses: jwlawson/actions-setup-cmake@v1.10
+      uses: jwlawson/actions-setup-cmake@v1.11
       with:
         cmake-version: '${{env.CMAKE_VERSION}}'
         github-api-token: ${{ secrets.GITHUB_TOKEN }}

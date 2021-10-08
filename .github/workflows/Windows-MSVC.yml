@@ -28,7 +28,7 @@ jobs:
         github-api-token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: '🟨 Setup Visual Studio'
-      uses: ilammy/msvc-dev-cmd@v1.9.0
+      uses: ilammy/msvc-dev-cmd@v1.10.0
 
     - name: '🔧 Configure'
       run: cmake -S ${{ github.workspace }} -B ${{ env.CMAKE_BUILD_PREFIX }} -Thost=x64

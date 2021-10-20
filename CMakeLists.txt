@@ -3,9 +3,9 @@ cmake_minimum_required(VERSION 3.15...3.20.2)
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 include(GetCMakeMM)
-cmmm(VERSION "2.0" REPOSITORY "flagarde/CMakeMM" PROVIDER "gitlab" VERBOSITY VERBOSE)
+cmmm(VERSION "2.0" REPOSITORY "flagarde/CMakeMM" PROVIDER "github" VERBOSITY VERBOSE)
 
-cmmm_modules_list(REPOSITORY "flagarde/CMakeCM" PROVIDER "gitlab")
+cmmm_modules_list(REPOSITORY "flagarde/CMakeCM" PROVIDER "github")
 
 project(openssl-cmake VERSION "2.1" LANGUAGES C CXX DESCRIPTION "CMake to compile OpenSSL" HOMEPAGE_URL "https://github.com/flagarde/openssl-cmake")
 

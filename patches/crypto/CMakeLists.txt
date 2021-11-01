@@ -277,6 +277,7 @@ add_submodule ( x509v3 pcy_cache.c pcy_data.c pcy_lib.c pcy_map.c pcy_node.c pcy
   v3_pci.c v3_pcia.c v3_pcons.c v3_pku.c v3_pmaps.c v3_prn.c v3_purp.c v3_skey.c v3_sxnet.c
   v3_tlsf.c v3_utl.c v3err.c )
 
+set( THREADS_PREFER_PTHREAD_FLAG TRUE)
 set( CMAKE_THREAD_PREFER_PTHREAD TRUE )
 find_package ( Threads QUIET)
 if( NOT Threads_FOUND )
@@ -297,7 +298,7 @@ if( WIN32 AND NOT CYGWIN )
   target_link_libraries(crypto ws2_32 crypt32 user32 advapi32 )
 else()
   if( Threads_FOUND )
-    target_link_libraries( crypto ${CMAKE_THREAD_LIBS_INIT} )
+    target_link_libraries( crypto Threads::Threads )
   endif()
   if( DSO_DLFCN AND HAVE_DLFCN_H )
     target_link_libraries( crypto dl )

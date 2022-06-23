@@ -7,13 +7,13 @@ cmmm(VERSION "2.2" REPOSITORY "flagarde/CMakeMM" PROVIDER "github" VERBOSITY VER
 
 cmmm_modules_list(REPOSITORY "flagarde/CMakeCM" PROVIDER "github")
 
-project(openssl-cmake VERSION "2.2" LANGUAGES C CXX DESCRIPTION "CMake to compile OpenSSL" HOMEPAGE_URL "https://github.com/flagarde/openssl-cmake")
+project(openssl-cmake VERSION "2.3" LANGUAGES C CXX DESCRIPTION "CMake to compile OpenSSL" HOMEPAGE_URL "https://github.com/flagarde/openssl-cmake")
 
 include(CPM)
 cpm()
 
 if(NOT DEFINED OPENSSL_VERSION)
-  set(OPENSSL_VERSION "1.1.1m")
+  set(OPENSSL_VERSION "1.1.1p")
 endif()
 
 if(NOT DEFINED OPENSSL_URL)

@@ -31,7 +31,7 @@ jobs:
       uses: ilammy/msvc-dev-cmd@v1.10.0
 
     - name: '🔧 Configure'
-      run: cmake -S ${{ github.workspace }} -B ${{ env.CMAKE_BUILD_PREFIX }} -Thost=x64
+      run: cmake -S ${{ github.workspace }} -B ${{ env.CMAKE_BUILD_PREFIX }}
 
     - name: '⚙️ Build'
       run: cmake --build ${{ env.CMAKE_BUILD_PREFIX }} --config ${{ env.CMAKE_BUILD_TYPE }} --parallel 2

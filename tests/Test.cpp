@@ -42,7 +42,7 @@ int verifySignature(const uchar* digest32, const char* sigr32, const char* sigs3
     bufPubKey.append(pubx32);
     bufPubKey.append(puby32);
 
-    //Load Publick Key
+    //Load Public Key
     if (!EC_POINT_hex2point(group, bufPubKey.c_str(), pub_key, NULL)) {
         printf("EC_POINT_hex2point failed:\n");
     }
@@ -123,7 +123,7 @@ int main() {
     if (verifySignature( digest32 , sigr32 , sigs32, pubx32, puby32) != 1) {
         printf("Failed to verify EC Signature\n");
     } else {
-        printf("Verifed EC Signature\n");
+        printf("Verified EC Signature\n");
     }
     return 0;
 }

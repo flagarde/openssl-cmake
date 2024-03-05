@@ -3,9 +3,9 @@ cmake_minimum_required(VERSION 3.15...3.20.2)
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 include(GetCMakeMM)
-cmmm(VERSION "2.3" REPOSITORY "flagarde/CMakeMM" PROVIDER "github" VERBOSITY VERBOSE)
+cmmm(VERSION "0")
 
-cmmm_modules_list(REPOSITORY "flagarde/CMakeCM" PROVIDER "github")
+cmmm_modules_list(URI "gh:flagarde/CMakeCM" FILEPATH "ModulesListNew.cmake")
 
 project(openssl-cmake VERSION "2.3" LANGUAGES C CXX DESCRIPTION "CMake to compile OpenSSL" HOMEPAGE_URL "https://github.com/flagarde/openssl-cmake")
 
@@ -13,15 +13,15 @@ include(CPM)
 cpm()
 
 if(NOT DEFINED OPENSSL_VERSION)
-  set(OPENSSL_VERSION "1.1.1p")
+  set(OPENSSL_VERSION "1.1.1w")
 endif()
 
 if(NOT DEFINED OPENSSL_URL)
-  set(OPENSSL_URL "https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz")
+  set(OPENSSL_URL "https://www.openssl.org/source/openssl-3.2.1.tar.gz")
 endif()
 
 if(NOT DEFINED OPENSSL_URL_HASH)
-  set(OPENSSL_URL_HASH "SHA256=bf61b62aaa66c7c7639942a94de4c9ae8280c08f17d4eac2e44644d9fc8ace6f")
+  set(OPENSSL_URL_HASH "SHA256=83c7329fe52c850677d75e5d0b0ca245309b97e8ecbcfdc1dfdc4ab9fac35b39")
 endif()
 
 if(NOT DEFINED WITH_APPS)

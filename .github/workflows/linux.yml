@@ -1,0 +1,193 @@
+---
+name: Linux
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  gcc:
+    runs-on: ubuntu-latest
+    name: gcc${{ matrix.version }} (c++${{ matrix.standard }})
+    container: flagarde/ci-ubuntu-gcc-${{ matrix.version }}-x86_64:latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # Before 4.7 there is no Non-static data member initializers that's bad!
+        version: [ 4.7, 4.8, 4.9, 5, 6, 7, 8, 9, 10, 11, 12, 13 ]
+        standard: [ 11, 14, 17, 20 ]
+        exclude:
+          # 4.6
+          - version: 4.6
+            standard: 14
+          - version: 4.6
+            standard: 17
+          - version: 4.6
+            standard: 20
+          # 4.7
+          - version: 4.7
+            standard: 14
+          - version: 4.7
+            standard: 17
+          - version: 4.7
+            standard: 20
+          # 4.8
+          - version: 4.8
+            standard: 17
+          - version: 4.8
+            standard: 20
+          # 4.9
+          - version: 4.9
+            standard: 17
+          - version: 4.9
+            standard: 20
+          # 5
+          - version: 5
+            standard: 20
+          # 6
+          - version: 6
+            standard: 20
+          # 7
+          - version: 7
+            standard: 20
+
+    steps:
+      - uses: ammaraskar/gcc-problem-matcher@master
+      - name: ⬇️ Install git
+        run: apt-get update ; apt-get install --no-install-recommends -y git
+      - name: ⬇️ Setup CMake
+        uses: lukka/get-cmake@latest
+        with:
+          cmakeVersion: ^3
+          ninjaVersion: ^1.11.1
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: 📂 Load .env file
+        if: hashFiles('.github/workflows/.env') != ''
+        uses: xom9ikk/dotenv@v2
+        with:
+          path: .github/workflows
+      - name: 🔧 Configure
+        run: cmake -S ${{ env.CMAKE_SOURCE_PREFIX }} -B ${{ env.CMAKE_BINARY_PREFIX }} -D CMAKE_BUILD_TYPE=${{ env.CMAKE_BUILD_TYPE }} -D CMAKE_CXX_STANDARD=${{ matrix.standard }} -D CMAKE_INSTALL_PREFIX=${{ env.CMAKE_INSTALL_PREFIX }} -D CPPTERMINAL_ENABLE_DOCS=OFF
+      - name: ⚙️ Build
+        run: cmake --build ${{ env.CMAKE_BINARY_PREFIX }} --config ${{ env.CMAKE_BUILD_TYPE }} --parallel ${{ env.CMAKE_NUMBER_JOBS }}
+      - name: 🧪 Test
+        run: ctest --test-dir ${{ env.CMAKE_BINARY_PREFIX }} -C ${{ env.CMAKE_BUILD_TYPE }} --output-on-failure
+      - name: 🎉 Install
+        run: cmake --install ${{ env.CMAKE_BINARY_PREFIX }} --prefix ${{ env.CMAKE_INSTALL_PREFIX }} --config ${{ env.CMAKE_BUILD_TYPE }}
+
+  clang:
+
+    runs-on: ubuntu-latest
+    name: clang${{ matrix.version }} (c++${{ matrix.standard }})
+    container: flagarde/ci-ubuntu-clang-${{ matrix.version }}-x86_64:latest
+    strategy:
+      fail-fast: false
+      matrix:
+        version: [ 3.5, 3.6, 3.7, 3.8, 3.9, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18 ]
+        standard: [ 11, 14, 17, 20 ]
+        exclude:
+          # 3.5
+          # 3.5 is buggy with c++14,c++17, skip it for now
+          - version: 3.5
+            standard: 20
+          - version: 3.5
+            standard: 17
+          - version: 3.5
+            standard: 14
+          # 3.6
+          - version: 3.6
+            standard: 20
+          # 3.7
+          - version: 3.7
+            standard: 20
+          # 3.8
+          - version: 3.8
+            standard: 20
+          # 3.9
+          - version: 3.9
+            standard: 20
+          # 3.9
+          - version: 4
+            standard: 20
+          # 6 has problem
+          - version: 6
+            standard: 20
+          # 7 has problem
+          - version: 7
+            standard: 20
+
+    steps:
+      - uses: ammaraskar/gcc-problem-matcher@master
+      - name: ⬇️ Install git
+        run: apt-get update ; apt-get install --no-install-recommends -y git
+      - name: ⬇️ Setup CMake
+        uses: lukka/get-cmake@latest
+        with:
+          cmakeVersion: ^3
+          ninjaVersion: ^1.11.1
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: 📂 Load .env file
+        if: hashFiles('.github/workflows/.env') != ''
+        uses: xom9ikk/dotenv@v2
+        with:
+          path: .github/workflows
+      - name: 🔧 Configure
+        run: cmake -S ${{ env.CMAKE_SOURCE_PREFIX }} -B ${{ env.CMAKE_BINARY_PREFIX }} -D CMAKE_BUILD_TYPE=${{ env.CMAKE_BUILD_TYPE }} -D CMAKE_CXX_STANDARD=${{ matrix.standard }} -D CMAKE_INSTALL_PREFIX=${{ env.CMAKE_INSTALL_PREFIX }} -D CPPTERMINAL_ENABLE_DOCS=OFF
+      - name: ⚙️ Build
+        run: cmake --build ${{ env.CMAKE_BINARY_PREFIX }} --config ${{ env.CMAKE_BUILD_TYPE }} --parallel ${{ env.CMAKE_NUMBER_JOBS }}
+      - name: 🧪 Test
+        run: ctest --test-dir ${{ env.CMAKE_BINARY_PREFIX }} -C ${{ env.CMAKE_BUILD_TYPE }} --output-on-failure
+      - name: 🎉 Install
+        run: cmake --install ${{ env.CMAKE_BINARY_PREFIX }} --prefix ${{ env.CMAKE_INSTALL_PREFIX }} --config ${{ env.CMAKE_BUILD_TYPE }}
+
+  intel:
+    runs-on: ubuntu-latest
+    name: intel-oneapi (c++${{ matrix.standard }})
+    container: flagarde/ci-ubuntu-gcc-11-x86_64:latest
+    strategy:
+      fail-fast: false
+      matrix:
+        standard: [ 11, 14, 17, 20 ]
+
+    steps:
+      - uses: ammaraskar/gcc-problem-matcher@master
+      - name: ⬇️ Install git
+        run: apt-get update ; apt-get install --no-install-recommends -y git
+      - name: ⬇️ Setup CMake
+        uses: lukka/get-cmake@latest
+        with:
+          cmakeVersion: ^3
+          ninjaVersion: ^1.11.1
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: 📂 Load .env file
+        if: hashFiles('.github/workflows/.env') != ''
+        uses: xom9ikk/dotenv@v2
+        with:
+          path: .github/workflows
+      - name: ⬇️ Install intel-oneapi
+        run: apt install --no-install-recommends -y intel-oneapi-compiler-dpcpp-cpp
+      - name: 🔧 Configure
+        env:
+          CC: icx
+          CXX: icpx
+        run: . /opt/intel/oneapi/setvars.sh ; cmake -S ${{ env.CMAKE_SOURCE_PREFIX }} -B ${{ env.CMAKE_BINARY_PREFIX }} -D CMAKE_BUILD_TYPE=${{ env.CMAKE_BUILD_TYPE }} -D CMAKE_CXX_STANDARD=${{ matrix.standard }} -D CMAKE_INSTALL_PREFIX=${{ env.CMAKE_INSTALL_PREFIX }} -D CPPTERMINAL_ENABLE_DOCS=OFF
+      - name: ⚙️ Build
+        run: cmake --build ${{ env.CMAKE_BINARY_PREFIX }} --config ${{ env.CMAKE_BUILD_TYPE }} --parallel ${{ env.CMAKE_NUMBER_JOBS }}
+      - name: 🧪 Test
+        run: ctest --test-dir ${{ env.CMAKE_BINARY_PREFIX }} -C ${{ env.CMAKE_BUILD_TYPE }} --output-on-failure
+      - name: 🎉 Install
+        run: cmake --install ${{ env.CMAKE_BINARY_PREFIX }} --prefix ${{ env.CMAKE_INSTALL_PREFIX }} --config ${{ env.CMAKE_BUILD_TYPE }}

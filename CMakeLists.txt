@@ -17,11 +17,11 @@ if(NOT DEFINED OPENSSL_VERSION)
 endif()
 
 if(NOT DEFINED OPENSSL_URL)
-  set(OPENSSL_URL "https://www.openssl.org/source/openssl-3.2.1.tar.gz")
+  set(OPENSSL_URL "https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz")
 endif()
 
 if(NOT DEFINED OPENSSL_URL_HASH)
-  set(OPENSSL_URL_HASH "SHA256=83c7329fe52c850677d75e5d0b0ca245309b97e8ecbcfdc1dfdc4ab9fac35b39")
+  set(OPENSSL_URL_HASH "SHA256=cf3098950cb4d853ad95c0841f1f9c6d3dc102dccfcacd521d93925208b76ac8")
 endif()
 
 if(NOT DEFINED WITH_APPS)

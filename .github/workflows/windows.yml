@@ -28,7 +28,7 @@ jobs:
     steps:
       - uses: ammaraskar/gcc-problem-matcher@master
       - name: 📥 Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - name: ⬇️ Setup CMake
@@ -72,7 +72,7 @@ jobs:
     steps:
       - uses: ammaraskar/msvc-problem-matcher@master
       - name: 📥 Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - name: ⬇️ Setup CMake
@@ -110,7 +110,7 @@ jobs:
     steps:
       - uses: ammaraskar/msvc-problem-matcher@master
       - name: 📥 Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - name: ⬇️ Setup CMake
@@ -148,7 +148,7 @@ jobs:
     steps:
       - uses: ammaraskar/gcc-problem-matcher@master
       - name: 📥 Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - name: ⬇️ Setup CMake
@@ -184,7 +184,7 @@ jobs:
     steps:
       - uses: ammaraskar/msvc-problem-matcher@master
       - name: 📥 Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - name: ⬇️ Setup CMake

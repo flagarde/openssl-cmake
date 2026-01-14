@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.15...3.20.2)
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 include(GetCMakeMM)
-cmmm(VERSION "0")
+cmmm(VERSION "1.0")
 
 cmmm_modules_list(URI "gh:flagarde/CMakeCM" FILEPATH "ModulesListNew.cmake")
 

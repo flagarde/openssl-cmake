@@ -5,7 +5,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_CURRENT_SOURCE_DIR}/cmake"
 include(GetCMakeMM)
 cmmm(VERSION "1.0")
 
-cmmm_modules_list(URI "gh:flagarde/CMakeCM" FILEPATH "ModulesListNew.cmake")
+cmmm_modules_list(URL "gh:flagarde/CMakeCM" FILEPATH "ModulesListNew.cmake")
 
 project(openssl-cmake VERSION "2.3" LANGUAGES C CXX DESCRIPTION "CMake to compile OpenSSL" HOMEPAGE_URL "https://github.com/flagarde/openssl-cmake")
 
